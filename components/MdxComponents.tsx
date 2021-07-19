@@ -17,6 +17,7 @@ import { DemoDialog } from '@components/demos/DemoDialog';
 import { DemoCounter } from '@components/demos/DemoCounter';
 import { DemoBox } from '@components/demos/DemoBox';
 import { button } from '@styles/button';
+import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 
 export const components = {
   Box: ({ css, as: Comp = 'div', ...props }: any) => <Comp className={box(css)} {...props} />,
@@ -104,11 +105,12 @@ export const components = {
       <NextImage {...(props as any)} />
     </div>
   ),
-  Video: (props) => (
+  video: (props) => (
     <div
       className={box({
         my: '$4',
         mx: '-$3',
+        border: '1px solid $gray',
         overflow: 'hidden',
         '@bp1': { mx: '-$5' },
       })}
@@ -142,9 +144,30 @@ export const components = {
       {...props}
     />
   ),
-  pre: ({ children, theme, showLineNumbers, ...props }) => {
+  pre: ({ children, theme, showLineNumbers = '', ...props }) => {
+    // console.log(props);
+    const [hovered, setHovered] = React.useState(false);
+    const [copy, setCopy] = React.useState(false);
+    const textRef = React.useRef(null);
+    const copyFunction = () => {
+      setCopy(true);
+      navigator.clipboard.writeText(textRef.current.textContent);
+      setTimeout(() => {
+        setCopy(false);
+      }, 2000);
+    };
+    const onEnter = () => {
+      setHovered(true);
+    };
+    const onExit = () => {
+      setHovered(false);
+      setCopy(false);
+    };
     return (
       <pre
+        onMouseEnter={onEnter}
+        onMouseLeave={onExit}
+        ref={textRef}
         className={pre({
           theme,
           showLineNumbers: typeof showLineNumbers === 'string',
@@ -152,6 +175,7 @@ export const components = {
             mx: '-$4',
             mt: '$3',
             mb: '$5',
+            position: 'relative',
 
             '[data-preview] + &': {
               marginTop: '0',
@@ -166,6 +190,34 @@ export const components = {
           },
         })}
       >
+        {hovered ? (
+          <button
+            className={button({
+              css: {
+                position: 'absolute',
+                right: '$2',
+                top: '$2',
+                color: '$white',
+                border: 'none',
+                zIndex: 10,
+                '&:hover': {
+                  bc: 'transparent',
+                  color: '$gray',
+                },
+                '&:focus': {
+                  outline: 'none',
+                  bc: 'transparent',
+                  color: '$gray',
+                },
+              },
+            })}
+            aria-label="Copy to Clipboard"
+            onClick={() => copyFunction()}
+            type="button"
+          >
+            {copy ? <CheckIcon /> : <CopyIcon />}
+          </button>
+        ) : null}
         {children}
       </pre>
     );
