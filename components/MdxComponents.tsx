@@ -104,12 +104,11 @@ export const components = {
       <NextImage {...(props as any)} />
     </div>
   ),
-  video: (props) => (
+  Video: (props) => (
     <div
       className={box({
         my: '$4',
         mx: '-$3',
-        border: '1px solid $gray',
         overflow: 'hidden',
         '@bp1': { mx: '-$5' },
       })}
