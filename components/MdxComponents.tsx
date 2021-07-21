@@ -105,12 +105,11 @@ export const components = {
       <NextImage {...(props as any)} />
     </div>
   ),
-  video: (props) => (
+  Video: (props) => (
     <div
       className={box({
         my: '$4',
         mx: '-$3',
-        border: '1px solid $gray',
         overflow: 'hidden',
         '@bp1': { mx: '-$5' },
       })}
@@ -145,7 +144,6 @@ export const components = {
     />
   ),
   pre: ({ children, theme, showLineNumbers = '', ...props }) => {
-    // console.log(props);
     const [hovered, setHovered] = React.useState(false);
     const [copy, setCopy] = React.useState(false);
     const textRef = React.useRef(null);
