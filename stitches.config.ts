@@ -1,6 +1,7 @@
-import { createCss, StitchesCss } from '@stitches/core';
+import { createStitches } from '@stitches/core';
+import type * as Stitches from '@stitches/core';
 
-const stitchesConfig = createCss({
+export const { css, globalCss, keyframes, getCssText, config } = createStitches({
   theme: {
     colors: {
       black: 'rgba(19, 19, 21, 1)',
@@ -136,6 +137,4 @@ const stitchesConfig = createCss({
   },
 });
 
-export type CSS = StitchesCss<typeof stitchesConfig>;
-
-export const { css, global, keyframes, getCssString } = stitchesConfig;
+export type CSS = Stitches.CSS<typeof config>;
