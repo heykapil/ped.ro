@@ -1,6 +1,7 @@
-import { createCss, StitchesCss } from '@stitches/core';
+import { createStitches } from '@stitches/core';
+import type * as Stitches from '@stitches/core';
 
-const stitchesConfig = createCss({
+export const { css, globalCss, keyframes, getCssText, config } = createStitches({
   theme: {
     colors: {
       black: 'rgba(19, 19, 21, 1)',
@@ -74,68 +75,66 @@ const stitchesConfig = createCss({
     bp4: '(min-width: 1200px)',
   },
   utils: {
-    p: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    p: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingTop: value,
       paddingBottom: value,
       paddingLeft: value,
       paddingRight: value,
     }),
-    pt: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    pt: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingTop: value,
     }),
-    pr: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    pr: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingRight: value,
     }),
-    pb: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    pb: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingBottom: value,
     }),
-    pl: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    pl: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingLeft: value,
     }),
-    px: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    px: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingLeft: value,
       paddingRight: value,
     }),
-    py: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    py: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingTop: value,
       paddingBottom: value,
     }),
-    m: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    m: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginTop: value,
       marginBottom: value,
       marginLeft: value,
       marginRight: value,
     }),
-    mt: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    mt: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginTop: value,
     }),
-    mr: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    mr: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginRight: value,
     }),
-    mb: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    mb: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginBottom: value,
     }),
-    ml: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    ml: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginLeft: value,
     }),
-    mx: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    mx: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginLeft: value,
       marginRight: value,
     }),
-    my: (config) => (value: keyof typeof config.theme['space'] | number | (string & {})) => ({
+    my: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginTop: value,
       marginBottom: value,
     }),
-    size: (config) => (value: keyof typeof config.theme['sizes'] | number | (string & {})) => ({
+    size: (value: Stitches.PropertyValue<'width'>) => ({
       width: value,
       height: value,
     }),
-    bc: (config) => (value: keyof typeof config.theme['colors'] | (string & {})) => ({
+    bc: (value: Stitches.PropertyValue<'backgroundColor'>) => ({
       backgroundColor: value,
     }),
   },
 });
 
-export type CSS = StitchesCss<typeof stitchesConfig>;
-
-export const { css, global, keyframes, getCssString } = stitchesConfig;
+export type CSS = Stitches.CSS<typeof config>;
