@@ -43,23 +43,23 @@ Install Stitches with `npm` or `yarn`.
 yarn add @stitches/react
 ```
 
-Create a `stitches.config.ts` (or `.js`) file and import the `createCss` function.
+Create a `stitches.config.ts` (or `.js`) file and import the `createStitches` function.
 
 ```jsx
 // stitches.config.ts
-import { createCss } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 ```
 
 Destructure and export the `styled` function.
 
 ```jsx line=4
 // stitches.config.ts
-import { createCss } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 
-export const { styled } = createCss();
+export const { styled } = createStitches();
 ```
 
-The `createCss` function accepts a config. It's useful for defining a prefix, the default theme, media queries, custom utils, and other things. You can learn more about it [here](https://stitches.dev/docs/api#createcss).
+The `createStitches` function accepts a config. It's useful for defining a prefix, the default theme, media queries, custom utils, and other things. You can learn more about it [here](https://stitches.dev/docs/api#createstitches).
 
 ## Define your default theme
 
@@ -71,9 +71,9 @@ Here's a simplified theme for the sake of brevity. For more complete themes, che
 
 ```jsx
 // stitches.config.ts
-import { createCss } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 
-export const { styled } = createCss({
+export const { styled } = createStitches({
   theme: {
     colors: {
       black: 'rgba(19, 19, 21, 1)',
@@ -345,9 +345,9 @@ You can use the `media` config key to define the media queries of your system. T
 
 ```jsx line=6-9
 // stitches.config.ts
-import { createCss } from '@stitches/react'
+import { createStitches } from '@stitches/react'
 
-export { styled } = createCss({
+export { styled } = createStitches({
   theme: {},
   media: {
     bp1: '(min-width: 575px)',
@@ -533,7 +533,7 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 export const DialogContent = React.forwardRef(({ children, ...props }, forwardedRef) => (
   <StyledContent {...props} ref={forwardedRef}>
     {children}
-    <StyledCloseButton as={StyledCloseButton}>
+    <StyledCloseButton>
       <Cross1Icon />
     </StyledCloseButton>
   </StyledContent>
@@ -557,7 +557,7 @@ import { Button } from './button';
 
 const App = () => (
   <Dialog>
-    <DialogTrigger as={Button}>Open dialog</DialogTrigger>
+    <DialogTrigger asChild><Button>Open dialog</Button</DialogTrigger>
     <DialogContent>
       <p>Order complete.</p>
       <p>You'll receive a confirmation email in the next few minutes.</p>
@@ -566,11 +566,9 @@ const App = () => (
 );
 ```
 
-### Polymorphic
+### Changing the rendered element
 
-Notice how Radix components are polymorphic, so they support the `as` prop. We can take advantage of this technique for the `DialogTrigger` and use our custom `Button` component instead.
-
-When doing so, variants are inferred.
+Notice how you can change the rendered element via the `asChild` prop.
 
 {
 
@@ -585,8 +583,8 @@ import { Button } from './button';
 
 const App = () => (
   <Dialog>
-    <DialogTrigger as={Button} color="orange">
-      Open dialog
+    <DialogTrigger asChild>
+      <Button color="orange">Open dialog</Button>
     </DialogTrigger>
     <DialogContent>
       <p>Order complete.</p>
@@ -603,9 +601,9 @@ You can add animation to the Radix dialog by targeting the `data-state` attribut
 But first, we need to export the `keyframes` function from Stitches.
 
 ```jsx
-import { createCss } from '@stitches/react';
+import { createStitches } from '@stitches/react';
 
-export const { styles, __keyframes__ } = createCss(/* your config */);
+export const { styles, __keyframes__ } = createStitches(/* your config */);
 ```
 
 Then use the `keyframes` function to create CSS keyframes.
@@ -708,7 +706,9 @@ import { Button } from './button';
 
 const App = () => (
   <Dialog>
-    <DialogTrigger as={Button}>Open dialog</DialogTrigger>
+    <DialogTrigger asChild>
+      <Button>Open dialog</Button>
+    </DialogTrigger>
     <DialogContent animation="scale">
       <p>Order complete.</p>
       <p>You'll receive a confirmation email in the next few minutes.</p>
