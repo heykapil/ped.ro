@@ -1,10 +1,10 @@
 // Inspired by https://github.com/j0lv3r4/mdx-prism
 
-const hastToHtml = require('hast-util-to-html');
-const unified = require('unified');
-const parse = require('rehype-parse');
+import { toHtml as hastToHtml } from 'hast-util-to-html';
+import { unified } from 'unified';
+import parse from 'rehype-parse';
 
-const lineNumberify = function lineNumberify(ast, lineNum = 1) {
+const lineNumberify = (ast, lineNum = 1) => {
   let lineNumber = lineNum;
   return ast.reduce(
     (result, node) => {
@@ -46,9 +46,9 @@ const lineNumberify = function lineNumberify(ast, lineNum = 1) {
   );
 };
 
-const wrapLines = function wrapLines(ast, linesToHighlight) {
+const wrapLines = (ast, linesToHighlight) => {
   const highlightAll = linesToHighlight.length === 1 && linesToHighlight[0] === 0;
-  const allLines = Array.from(new Set(ast.map((x) => x.lineNumber)));
+  const allLines: any[] = Array.from(new Set(ast.map((x) => x.lineNumber)));
   let i = 0;
   const wrapped = allLines.reduce((nodes, marker) => {
     const line = marker;
@@ -90,7 +90,7 @@ const wrapLines = function wrapLines(ast, linesToHighlight) {
 // https://github.com/gatsbyjs/gatsby/pull/26161/files
 const MULTILINE_TOKEN_SPAN = /<span class="token ([^"]+)">[^<]*\n[^<]*<\/span>/g;
 
-const applyMultilineFix = function (ast) {
+const applyMultilineFix = (ast) => {
   // AST to HTML
   let html = hastToHtml(ast);
 
@@ -105,7 +105,7 @@ const applyMultilineFix = function (ast) {
   return hast.children;
 };
 
-module.exports = function (ast, lines) {
+export const highlightLine = (ast, lines) => {
   const formattedAst = applyMultilineFix(ast);
   const numbered = lineNumberify(formattedAst).nodes;
 

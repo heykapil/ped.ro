@@ -15,7 +15,7 @@ import type { Post } from '.contentlayer/types';
 import { allPosts } from '.contentlayer/data';
 
 export default function PostPage({ post }: { post: Post }) {
-  const Component = React.useMemo(() => getMDXComponent(post.content.code), [post.content.code]);
+  const Component = React.useMemo(() => getMDXComponent(post.body.code), [post.body.code]);
 
   const twitterShare = `
 	https://twitter.com/intent/tweet?
