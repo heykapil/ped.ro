@@ -1,15 +1,15 @@
 // Inspired by https://github.com/rexxars/react-refractor
 import React from 'react';
-import refractor from 'refractor/core';
+import { refractor } from 'refractor';
 import js from 'refractor/lang/javascript';
 import jsx from 'refractor/lang/jsx';
 import bash from 'refractor/lang/bash';
 import css from 'refractor/lang/css';
 import diff from 'refractor/lang/diff';
-import hastToHtml from 'hast-util-to-html';
+import { toHtml as hastToHtml } from 'hast-util-to-html';
 import rangeParser from 'parse-numeric-range';
-import highlightLine from '@lib/rehype-highlight-line';
-import highlightWord from '@lib/rehype-highlight-word';
+import { highlightLine } from '@lib/rehype-highlight-line';
+import { highlightWord } from '@lib/rehype-highlight-word';
 import { pre } from '@styles/pre';
 
 refractor.register(js);
@@ -30,7 +30,7 @@ type CodeBlockProps = {
 export const CodeBlock = React.forwardRef<HTMLPreElement, CodeBlockProps>(
   (_props, forwardedRef) => {
     const { language, value, line = '0', className = '', css, showLineNumbers, ...props } = _props;
-    let result = refractor.highlight(value, language);
+    let result: any = refractor.highlight(value, language);
 
     result = highlightLine(result, rangeParser(line));
 
