@@ -1,6 +1,6 @@
 import React from 'react';
 import NextLink from 'next/link';
-import { getMDXComponent } from 'mdx-bundler/client';
+import { useMDXComponent } from 'next-contentlayer/hooks';
 import { parseISO, format } from 'date-fns';
 import TitleAndMetaTags from '@components/TitleAndMetaTags';
 import { components } from '@components/MdxComponents';
@@ -15,7 +15,7 @@ import type { Post } from '.contentlayer/types';
 import { allPosts } from '.contentlayer/data';
 
 export default function PostPage({ post }: { post: Post }) {
-  const Component = React.useMemo(() => getMDXComponent(post.body.code), [post.body.code]);
+  const Component = useMDXComponent(post.body.code);
 
   const twitterShare = `
 	https://twitter.com/intent/tweet?
