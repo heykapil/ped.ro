@@ -1,13 +1,13 @@
-import rehypeHighlightCode from '@lib/rehype-highlight-code';
-import rehypeMetaAttribute from '@lib/rehype-meta-attribute';
-import { defineDocument, fromLocalContent } from 'contentlayer/source-local';
+import { rehypeHighlightCode } from './lib/rehype-highlight-code';
+import { rehypeMetaAttribute } from './lib/rehype-meta-attribute';
+import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import readingTime from 'reading-time';
 import remarkSlug from 'remark-slug';
 
-export const Post = defineDocument(() => ({
+export const Post = defineDocumentType(() => ({
   name: 'Post',
   filePathPattern: `**/*.mdx`,
-  fileType: 'mdx',
+  bodyType: 'mdx',
   fields: {
     title: {
       type: 'string',
@@ -26,14 +26,14 @@ export const Post = defineDocument(() => ({
     slug: { type: 'string', resolve: (_) => _._raw.flattenedPath },
     readingTime: {
       type: 'json',
-      resolve: (_) => readingTime(_.content.code, { wordsPerMinute: 300 }),
+      resolve: (_) => readingTime(_.body.raw, { wordsPerMinute: 300 }),
     },
   },
 }));
 
-export default fromLocalContent({
+export default makeSource({
   contentDirPath: 'posts',
-  schema: [Post],
+  documentTypes: [Post],
   mdx: {
     remarkPlugins: [remarkSlug],
     rehypePlugins: [rehypeMetaAttribute, rehypeHighlightCode],
