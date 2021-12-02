@@ -6,6 +6,9 @@ export const globalStyles = globalCss({
     color: '$white',
     fontFamily: '$sans',
     margin: 0,
+    '&.metaverse': {
+      background: 'linear-gradient(120deg, #eefadc, #fce5f3)',
+    },
   },
 
   ul: {
