@@ -7,15 +7,132 @@ import { text } from '@styles/text';
 import { container } from '@styles/container';
 import { link } from '@styles/link';
 
+import { useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
+import { formatEther } from '@ethersproject/units';
+
 import type { Post } from '.contentlayer/types';
 import { allPosts } from '.contentlayer/data';
+import { button } from '@styles/button';
+import { metaverse } from 'stitches.config';
+
+const injected = new InjectedConnector({ supportedChainIds: [1, 5] });
+
+function Balance() {
+  const { account, library, chainId } = useWeb3React();
+  const [balance, setBalance] = React.useState();
+  React.useEffect((): any => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      library
+        .getBalance(account)
+        .then((balance: any) => {
+          if (!stale) {
+            setBalance(balance);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setBalance(null);
+          }
+        });
+
+      return () => {
+        stale = true;
+        setBalance(undefined);
+      };
+    }
+  }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
+
+  return (
+    <>
+      {balance === null
+        ? 'Error'
+        : balance
+        ? `Ξ${Math.round((formatEther(balance) as any) * 1e4) / 1e4}`
+        : ''}
+    </>
+  );
+}
+
+function EnsName() {
+  const { account, library, chainId } = useWeb3React();
+  const [ensName, setEnsName] = React.useState();
+  React.useEffect((): any => {
+    if (!!account && !!library) {
+      let stale = false;
+
+      library
+        .lookupAddress(account)
+        .then((account: any) => {
+          if (!stale) {
+            setEnsName(account);
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            setEnsName(null);
+          }
+        });
+
+      return () => {
+        stale = true;
+        setEnsName(undefined);
+      };
+    }
+  }, [account, library, chainId]); // ensures refresh if referential identity of library doesn't change across chainIds
+
+  return (
+    <span className={box({ fontFamily: '$web3' })}>
+      {ensName === null
+        ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}`
+        : ensName}
+    </span>
+  );
+}
 
 export default function Home({ posts }: { posts: Post[] }) {
+  const { activate, deactivate, active, library, account } = useWeb3React();
+
+  const onConnect = async () => {
+    await activate(injected);
+  };
+
+  const onDisconnect = () => {
+    deactivate();
+  };
+
+  React.useEffect(() => {
+    // getLove(account)
+    if (account) {
+      document.body.classList.add(metaverse);
+    } else {
+      document.body.className = '';
+    }
+  }, [account]);
+
   return (
     <>
       <TitleAndMetaTags />
 
-      <div className={box({ bc: '$white', color: '$black' })}>
+      <div className={box({ position: 'absolute', top: '$3', right: '$3' })}>
+        {!active ? null : (
+          <button className={button()} onClick={onDisconnect}>
+            Disconnect Wallet
+          </button>
+        )}
+      </div>
+
+      <div
+        className={box({
+          bc: '$white',
+          color: '$black',
+          '.metaverse &': {
+            bc: 'transparent',
+          },
+        })}
+      >
         <div
           className={container({
             css: {
@@ -43,8 +160,21 @@ export default function Home({ posts }: { posts: Post[] }) {
               },
             })}
           >
-            Pedro <span className={text({ css: { color: '$gray' } })}>Duarte</span>
+            Pedro <span className={text({ css: { color: '$gray' } })}>Duarte</span>{' '}
           </h1>
+
+          <div
+            className={box({
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              fontSize: '200px',
+              mixBlendMode: 'overlay',
+              transform: 'translate(-50%, -50%) rotate(-20deg)',
+            })}
+          >
+            {account && <EnsName />}
+          </div>
 
           <h2
             className={text({
@@ -54,8 +184,25 @@ export default function Home({ posts }: { posts: Post[] }) {
               },
             })}
           >
-            I'm a UI developer interested in design systems, jamstack, user/dev experience and under
-            engineering.
+            I'm a UI developer interested in design systems,{' '}
+            <button
+              className={box({
+                all: 'unset',
+                fontFamily: '$web3',
+                fontSize: '1.2em',
+                backgroundSize: '200%',
+                backgroundClip: 'text',
+                transition: 'all 1600ms',
+                '&:hover': {
+                  cursor: 'pointer',
+                  backgroundPosition: 'top right',
+                },
+              })}
+              onClick={onConnect}
+            >
+              web3
+            </button>
+            , user/dev experience and under engineering.
           </h2>
 
           <p
@@ -132,6 +279,10 @@ export default function Home({ posts }: { posts: Post[] }) {
         className={box({
           padding: '$3',
           bc: '$yellow',
+          position: 'relative',
+          '.metaverse &': {
+            bc: 'transparent',
+          },
           '@bp1': {
             padding: '$4',
           },
