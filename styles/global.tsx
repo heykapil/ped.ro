@@ -7,7 +7,7 @@ export const globalStyles = globalCss({
     fontFamily: '$sans',
     margin: 0,
     '&.metaverse': {
-      background: 'linear-gradient(120deg, #eefadc, #fce5f3)',
+      background: 'linear-gradient(120deg, #eefadc, #fce5f3, #cee7fe)',
     },
   },
 
