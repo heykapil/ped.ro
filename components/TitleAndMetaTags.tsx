@@ -13,7 +13,7 @@ export default function TitleAndMetaTags({
   url = 'https://ped.ro',
   pathname,
   title = 'Pedro Duarte',
-  description = 'UI developer interested in design systems, jamstack, user/dev experience and under engineering.',
+  description = 'UI developer interested in design systems, web3, user/dev experience and under engineering.',
 }: TitleAndMetaTagsProps) {
   const router = useRouter();
 
