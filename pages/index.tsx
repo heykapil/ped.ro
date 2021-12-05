@@ -59,6 +59,7 @@ function Balance() {
 function EnsName() {
   const { account, library, chainId } = useWeb3React();
   const [ensName, setEnsName] = React.useState();
+
   React.useEffect((): any => {
     if (!!account && !!library) {
       let stale = false;
@@ -93,7 +94,10 @@ function EnsName() {
 }
 
 export default function Home({ posts }: { posts: Post[] }) {
-  const { activate, deactivate, active, library, account } = useWeb3React();
+  const { activate, deactivate, active, account } = useWeb3React();
+  const [openSeaAssets, setOpenSeaAssets] = React.useState([]);
+  const [cursorAssets, setCursorAssets] = React.useState([]);
+  const cursor = React.useRef(null);
 
   const onConnect = async () => {
     await activate(injected);
@@ -101,11 +105,45 @@ export default function Home({ posts }: { posts: Post[] }) {
 
   const onDisconnect = () => {
     deactivate();
+    setCursorAssets([]);
+  };
+
+  const getAssets = (account) => {
+    fetch(`https://api.opensea.io/api/v1/assets?owner=${account}`)
+      .then((response) => response.json())
+      .then((data) => setOpenSeaAssets(data.assets));
   };
 
   React.useEffect(() => {
-    // getLove(account)
+    console.log(openSeaAssets);
+    const deadfellaz = openSeaAssets.filter((asset) => asset.name.includes('DeadFellaz'));
+    // const boiz = openSeaAssets.filter((asset) => asset.name.includes('DeadFellaz'));
+    const fangster = openSeaAssets.filter((asset) => asset.name.includes('Fangster'));
+    const roboto = openSeaAssets.filter((asset) => asset.name.includes('Roboto'));
+    setCursorAssets([...deadfellaz, ...fangster, ...roboto]);
+  }, [openSeaAssets]);
+
+  React.useEffect(() => {
+    if (cursorAssets.length > 0) {
+      const randomCursor = cursorAssets[Math.floor(Math.random() * cursorAssets.length)];
+      cursor.current.style.backgroundImage = `url(${(randomCursor as any).image_preview_url})`;
+    } else {
+      cursor.current.style.backgroundImage = '';
+    }
+  }, [cursorAssets]);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e) => {
+      cursor.current.style.left = e.pageX + 'px';
+      cursor.current.style.top = e.pageY + 'px';
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [cursor]);
+
+  React.useEffect(() => {
     if (account) {
+      getAssets(account);
       document.body.classList.add(metaverse);
     } else {
       document.body.className = '';
@@ -165,6 +203,7 @@ export default function Home({ posts }: { posts: Post[] }) {
 
           <div
             className={box({
+              pointerEvents: 'none',
               position: 'absolute',
               left: '50%',
               top: '50%',
@@ -314,6 +353,19 @@ export default function Home({ posts }: { posts: Post[] }) {
           </ul>
         </div>
       </div>
+      <div
+        ref={cursor}
+        id="cursor"
+        style={{}}
+        className={box({
+          pointerEvents: 'none',
+          width: 100,
+          height: 100,
+          position: 'absolute',
+          transform: 'translate(-50%,-50%)',
+          backgroundSize: 'cover',
+        })}
+      ></div>
     </>
   );
 }
